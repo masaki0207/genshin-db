@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原神 厳選基準マネージャー PRO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>原神 厳選基準データベース</h1>
+        <nav>
+            <button onclick="changeMode('view')">データ閲覧（図鑑）</button>
+            <button onclick="changeMode('register')">新規追加・編集</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="view-mode">
+            <div class="filter-bar">
+                <input type="text" id="search-input" placeholder="名前や聖遺物名で検索..." oninput="filterData()">
+            </div>
+            
+            <div class="display-container">
+                <div class="section-header">
+                    <h2>キャラクター図鑑</h2>
+                </div>
+                <div id="char-list" class="list-container">
+                    </div>
+
+                <div class="section-header" style="margin-top: 40px;">
+                    <h2>聖遺物図鑑（自動集計）</h2>
+                    <p style="font-size: 0.8rem; color: #666;">※キャラ登録の情報から「残すべきメインステ」を自動計算します</p>
+                </div>
+                <div id="art-list" class="list-container">
+                    </div>
+            </div>
+        </section>
+
+        <section id="register-mode" style="display:none;">
+            <div class="mode-tabs">
+                <button onclick="showForm('char-form-container')">キャラを登録・編集</button>
+                <button onclick="showForm('art-form-container')">聖遺物を登録・編集</button>
+            </div>
+
+            <div id="char-form-container" class="registration-form">
+                <h3 id="char-form-title">キャラクター登録</h3>
+                <form id="char-form">
+                    <div class="form-group">
+                        <label>キャラ名:</label>
+                        <input type="text" id="char-name" required placeholder="例：ナヒーダ">
+                    </div>
+
+                    <div class="form-group">
+                        <label>基本情報:</label>
+                        <div class="checkbox-group">
+                            <span>レア:</span>
+                            <label><input type="radio" name="rarity" value="5" checked> ★5</label>
+                            <label><input type="radio" name="rarity" value="4"> ★4</label>
+                        </div>
+                        <div class="checkbox-group" style="margin-top:5px;">
+                            <span>元素:</span>
+                            <label><input type="checkbox" name="element" value="炎"> 炎</label>
+                            <label><input type="checkbox" name="element" value="水"> 水</label>
+                            <label><input type="checkbox" name="element" value="風"> 風</label>
+                            <label><input type="checkbox" name="element" value="雷"> 雷</label>
+                            <label><input type="checkbox" name="element" value="草"> 草</label>
+                            <label><input type="checkbox" name="element" value="氷"> 氷</label>
+                            <label><input type="checkbox" name="element" value="岩"> 岩</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>おすすめ聖遺物シリーズ（複数選択可）:</label>
+                        <div id="char-target-art-list" class="checkbox-group art-selection-area">
+                            <p style="font-size: 0.8rem; color: #999;">聖遺物を先に登録してください</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>おすすめメインステータス:</label>
+                        <div class="checkbox-group">
+                            <span>砂:</span>
+                            <label><input type="checkbox" name="main-suna" value="攻撃%"> 攻撃%</label>
+                            <label><input type="checkbox" name="main-suna" value="HP%"> HP%</label>
+                            <label><input type="checkbox" name="main-suna" value="防御%"> 防御%</label>
+                            <label><input type="checkbox" name="main-suna" value="熟知"> 熟知</label>
+                            <label><input type="checkbox" name="main-suna" value="元チャ"> 元チャ</label>
+                        </div>
+                        <div class="checkbox-group" style="margin-top:5px;">
+                            <span>杯:</span>
+                            <label><input type="checkbox" name="main-sakazuki" value="炎ダメ"> 炎</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="水ダメ"> 水</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="草ダメ"> 草</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="雷ダメ"> 雷</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="風ダメ"> 風</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="氷ダメ"> 氷</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="岩ダメ"> 岩</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="物理ダメ"> 物理</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="攻撃%"> 攻撃%</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="HP%"> HP%</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="防御%"> 防御%</label>
+                            <label><input type="checkbox" name="main-sakazuki" value="熟知"> 熟知</label>
+                        </div>
+                        <div class="checkbox-group" style="margin-top:5px;">
+                            <span>冠:</span>
+                            <label><input type="checkbox" name="main-kanmuri" value="会心率"> 会心率</label>
+                            <label><input type="checkbox" name="main-kanmuri" value="会心ダメ"> 会心ダメ</label>
+                            <label><input type="checkbox" name="main-kanmuri" value="治療"> 治療</label>
+                            <label><input type="checkbox" name="main-kanmuri" value="HP%"> HP%</label>
+                            <label><input type="checkbox" name="main-kanmuri" value="防御%"> 防御%</label>
+                            <label><input type="checkbox" name="main-kanmuri" value="攻撃%"> 攻撃%</label>
+                            <label><input type="checkbox" name="main-kanmuri" value="熟知"> 熟知</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>優先サブステータス:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="sub-stats" value="会心系"> 会心系</label>
+                            <label><input type="checkbox" name="sub-stats" value="攻撃%"> 攻撃%</label>
+                            <label><input type="checkbox" name="sub-stats" value="HP%"> HP%</label>
+                            <label><input type="checkbox" name="sub-stats" value="防御%"> 防御%</label>
+                            <label><input type="checkbox" name="sub-stats" value="熟知"> 熟知</label>
+                            <label><input type="checkbox" name="sub-stats" value="元チャ"> 元チャ</label>
+                            <label><input type="checkbox" name="sub-stats" value="攻撃(実)"> 攻撃(実)</label>
+                            <label><input type="checkbox" name="sub-stats" value="HP(実)"> HP(実)</label>
+                            <label><input type="checkbox" name="sub-stats" value="防御(実)"> 防御(実)</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>キャラアイコンURL:</label>
+                        <input type="url" id="char-icon-url" placeholder="https://...">
+                    </div>
+
+                    <button type="submit" class="save-btn">保存（既存キャラは上書き）</button>
+                </form>
+            </div>
+
+            <div id="art-form-container" class="registration-form" style="display:none;">
+                <h3 id="art-form-title">聖遺物シリーズ登録</h3>
+                <form id="art-form">
+                    <div class="form-group">
+                        <label>シリーズ名:</label>
+                        <input type="text" id="art-name" required placeholder="例：深林の記憶">
+                    </div>
+                    <div class="form-group">
+                        <label>2セット効果:</label>
+                        <textarea id="art-effect-2" placeholder="草元素ダメージ+15%"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>4セット効果:</label>
+                        <textarea id="art-effect-4" placeholder="元素スキルか爆発が命中すると..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>聖遺物画像URL:</label>
+                        <input type="url" id="art-img-url" placeholder="https://...">
+                    </div>
+                    <button type="submit" class="save-btn">保存（既存シリーズは上書き）</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <button id="back-to-top" title="ページトップへ">↑</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
