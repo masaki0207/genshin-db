@@ -1,5 +1,5 @@
 // 【重要】ご自身のウェブアプリURLに書き換えてください
-const GAS_URL = "https://script.google.com/macros/s/AKfycbw2H7TBw2W4e_eaklGHzTZOOYYB5rg33aAJRm6FXonJrDL-akCE1Qms1VxIyh6a1Upz/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxE43qe2MLKZrdIQKx7AwKC7bdcazWxxnCOE2F2v33ODhE5sUGXZnkMasPJT3pRjfcM/exec";
 
 let allData = { characters: [], artifacts: [] };
 
@@ -188,3 +188,4 @@ function filterData() {
     });
 
 }
+
