@@ -111,7 +111,7 @@ main {
     border-radius: 8px;
 }
 
-.char-card img { border-radius: 50%; border: 2px solid #eee; }
+.char-card img { border: 2px solid #eee; }
 
 .card-info { flex-grow: 1; }
 .card-info h4 { margin: 0; font-size: 1.1rem; }
@@ -241,3 +241,4 @@ input[type="text"], input[type="url"], textarea {
     .list-container { grid-template-columns: 1fr; }
     .card { padding: 15px; }
 }
+
