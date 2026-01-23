@@ -19,7 +19,7 @@
     <main>
         <section id="view-mode">
             <div class="filter-bar">
-                <input type="text" id="search-input" placeholder="名前や聖遺物名で検索..." oninput="filterData()">
+                <input type="text" id="search-input" placeholder="名前や聖遺物、武器種で検索..." oninput="filterData()">
             </div>
             
             <div class="display-container">
@@ -31,7 +31,7 @@
 
                 <div class="section-header" style="margin-top: 40px;">
                     <h2>聖遺物図鑑（自動集計）</h2>
-                    <p style="font-size: 0.8rem; color: #666;">※キャラ登録の情報から「残すべきメインステ」を自動計算します</p>
+                    <p style="font-size: 0.8rem; color: #666;">※キャラ登録情報から「残すべきメインステ」を算出します</p>
                 </div>
                 <div id="art-list" class="list-container">
                     </div>
@@ -45,11 +45,11 @@
             </div>
 
             <div id="char-form-container" class="registration-form">
-                <h3 id="char-form-title">キャラクター登録</h3>
+                <h3>キャラクター詳細登録</h3>
                 <form id="char-form">
                     <div class="form-group">
                         <label>キャラ名:</label>
-                        <input type="text" id="char-name" required placeholder="例：ナヒーダ">
+                        <input type="text" id="char-name" required placeholder="例：フリーナ">
                     </div>
 
                     <div class="form-group">
@@ -69,13 +69,26 @@
                             <label><input type="checkbox" name="element" value="氷"> 氷</label>
                             <label><input type="checkbox" name="element" value="岩"> 岩</label>
                         </div>
+                        <div class="checkbox-group" style="margin-top:5px;">
+                            <span>武器種:</span>
+                            <label><input type="checkbox" name="weapon-type" value="片手剣"> 片手剣</label>
+                            <label><input type="checkbox" name="weapon-type" value="両手剣"> 両手剣</label>
+                            <label><input type="checkbox" name="weapon-type" value="長柄武器"> 長柄</label>
+                            <label><input type="checkbox" name="weapon-type" value="法器"> 法器</label>
+                            <label><input type="checkbox" name="weapon-type" value="弓"> 弓</label>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>おすすめ聖遺物シリーズ（複数選択可）:</label>
+                        <label>おすすめ武器 / 目標ステータス:</label>
+                        <input type="text" id="recommended-weapons" placeholder="おすすめ武器（例：静水流転の輝き, 腐植の剣）" style="margin-bottom:10px;">
+                        <input type="text" id="target-er" placeholder="目標チャージ効率（例：160%〜180%）">
+                    </div>
+
+                    <div class="form-group">
+                        <label>おすすめ聖遺物（複数選択可）:</label>
                         <div id="char-target-art-list" class="checkbox-group art-selection-area">
-                            <p style="font-size: 0.8rem; color: #999;">聖遺物を先に登録してください</p>
-                        </div>
+                            </div>
                     </div>
 
                     <div class="form-group">
@@ -116,17 +129,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label>優先サブステータス:</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" name="sub-stats" value="会心系"> 会心系</label>
-                            <label><input type="checkbox" name="sub-stats" value="攻撃%"> 攻撃%</label>
-                            <label><input type="checkbox" name="sub-stats" value="HP%"> HP%</label>
-                            <label><input type="checkbox" name="sub-stats" value="防御%"> 防御%</label>
-                            <label><input type="checkbox" name="sub-stats" value="熟知"> 熟知</label>
-                            <label><input type="checkbox" name="sub-stats" value="元チャ"> 元チャ</label>
-                            <label><input type="checkbox" name="sub-stats" value="攻撃(実)"> 攻撃(実)</label>
-                            <label><input type="checkbox" name="sub-stats" value="HP(実)"> HP(実)</label>
-                            <label><input type="checkbox" name="sub-stats" value="防御(実)"> 防御(実)</label>
+                        <label>優先サブステータス（1位から順に）:</label>
+                        <div id="substat-priority-list">
+                            <input type="text" class="substat-rank" placeholder="1位（例：会心率）" style="margin-bottom:5px;">
+                            <input type="text" class="substat-rank" placeholder="2位（例：会心ダメージ）" style="margin-bottom:5px;">
+                            <input type="text" class="substat-rank" placeholder="3位（例：HP%）" style="margin-bottom:5px;">
+                            <input type="text" class="substat-rank" placeholder="4位（例：元素チャージ効率）">
                         </div>
                     </div>
 
@@ -135,30 +143,30 @@
                         <input type="url" id="char-icon-url" placeholder="https://...">
                     </div>
 
-                    <button type="submit" class="save-btn">保存（既存キャラは上書き）</button>
+                    <button type="submit" class="save-btn">この内容で保存・更新</button>
                 </form>
             </div>
 
             <div id="art-form-container" class="registration-form" style="display:none;">
-                <h3 id="art-form-title">聖遺物シリーズ登録</h3>
+                <h3>聖遺物シリーズ登録</h3>
                 <form id="art-form">
                     <div class="form-group">
                         <label>シリーズ名:</label>
-                        <input type="text" id="art-name" required placeholder="例：深林の記憶">
+                        <input type="text" id="art-name" required placeholder="例：黄金の劇団">
                     </div>
                     <div class="form-group">
                         <label>2セット効果:</label>
-                        <textarea id="art-effect-2" placeholder="草元素ダメージ+15%"></textarea>
+                        <textarea id="art-effect-2" placeholder="元素スキルのダメージ+20%"></textarea>
                     </div>
                     <div class="form-group">
                         <label>4セット効果:</label>
-                        <textarea id="art-effect-4" placeholder="元素スキルか爆発が命中すると..."></textarea>
+                        <textarea id="art-effect-4" placeholder="元素スキルのダメージがさらに+25%..."></textarea>
                     </div>
                     <div class="form-group">
                         <label>聖遺物画像URL:</label>
                         <input type="url" id="art-img-url" placeholder="https://...">
                     </div>
-                    <button type="submit" class="save-btn">保存（既存シリーズは上書き）</button>
+                    <button type="submit" class="save-btn">聖遺物を保存・更新</button>
                 </form>
             </div>
         </section>
